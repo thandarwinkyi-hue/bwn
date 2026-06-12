@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ကမ္မဋ္ဌာန်းတရားတော်များ</title>
+    <title>ကမ္မဋ္ဌာန်းတရားများ</title>
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700&display=swap');
 
@@ -123,6 +123,76 @@
         #reader-card { box-shadow: none !important; margin: 0 !important; padding: 0 !important; }
         #content { font-size: 17pt !important; }
     }
+    /* Wiki စာရင်းဇယားများကို ဖုန်းမျက်နှာပြင်နှင့် အဆင်ပြေအောင် ညှိပေးသည့်စနစ် */
+#content table {
+    width: 100% !important;
+    max-width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 14px;
+    display: block;       /* ဖုန်းပေါ်တွင် ဇယားပုံစံမပျက်စေရန် */
+    overflow-x: auto;     /* ဇယားကျယ်ပါက ဘေးတိုက် ရွှေ့ဖတ်နိုင်ရန် */
+    -webkit-overflow-scrolling: touch;
+}
+
+#content th, #content td {
+    border: 1px solid #ddd !important;
+    padding: 8px 10px;
+    text-align: left;
+    min-width: 80px;      /* ကော်လံများ စာလုံးထပ်မသွားစေရန် */
+}
+
+#content th {
+    background-color: #f1f2f6;
+    font-weight: bold;
+}
+/* ဇယားများကို စာအုပ်ပုံစံထဲတွင် ပုံမပျက်စေရန်နှင့် မဆန့်ပါက ဘေးတိုက်ဆွဲကြည့်နိုင်ရန် */
+#content table {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important; 
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    -webkit-column-break-inside: avoid !important;
+    margin: 15px 0;
+}
+/* ဇယားများအတွင်းမှ စာလုံးအရွယ်အစားကို ကြီးရန် */
+#content table th, 
+#content table td {
+    font-size: 18px !important; /* မိမိနှစ်သက်ရာ အရွယ်အစားသို့ ပြင်နိုင်ပါသည် (ဥပမာ 18px) */
+    padding: 8px !important; /* စာလုံးများ ပူးကပ်မနေစေရန် ဘေးဘောင်ချဲ့ခြင်း */
+    line-height: 1.6 !important; /* စာကြောင်း နှစ်ကြောင်းကြား အကွာအဝေး */
+}
+/* 🖨️ Print ထုတ်သည့်အခါတွင်သာ အလုပ်လုပ်မည့် CSS (မာတိကာ လုံးဝဖျောက်ထားသည်) */
+@media print {
+    /* ၁။ 💡 Wikipedia / Wikisource မှ ပါလာသော မာတိကာအကွက် (TOC) ကို လုံးဝ ဖျောက်ရန် */
+    .toc, #toc, .mw-toc {
+        display: none !important;
+    }
+
+    /* ၂။ ခေါင်းစဉ်များ၏ အောက်တွင် စာမျက်နှာ မပြတ်စေရန် (ခေါင်းစဉ်နှင့် စာပိုဒ် တွဲလျက်ရှိစေရန်) */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+    }
+
+    /* ၃။ စာပိုဒ်များကို လိုအပ်ပါက နောက်စာမျက်နှာသို့ ဆက်လက်စီးဆင်းခွင့်ပြုရန် (နေရာလွတ်များ မဖြစ်စေရန်) */
+    p {
+        page-break-inside: auto !important; 
+        break-inside: auto !important;
+        orphans: 2;
+        widows: 2;
+    }
+
+    /* ၄။ ပုံများနှင့် ဇယားများကိုသာ တစ်ဝက်တစ်ပျက် ပြတ်မသွားစေရန် တားဆီးထားမည် */
+    img, table, tr, li {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+}
+
+
     </style>
 </head>
 <body class="sepia-mode">
@@ -139,10 +209,11 @@
             <button class="btn-icon" onclick="exportPDF()">🖨️ ပရင့်</button>
             <!-- Top Bar Search Box -->
             <div style="position: relative; display: flex; gap: 5px; margin-right: 5px;">
-    <input type="text" id="globalSearch" placeholder=" ရှာရန်..." autocomplete="off" style="padding: 4px 8px; border-radius: 6px; border: none; font-family: inherit; outline: none; width: 130px; font-size: 14px;">
-    <button class="btn-icon" onclick="searchArticle()" style="background: #e67e22;">🔍</button>
-    
-    <div id="suggestion-box" style="position: absolute; top: 100%; left: 0; width: 220px; background: white; color: #2c3e50; border-radius: 6px; max-height: 250px; overflow-y: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: none; z-index: 9999; margin-top: 5px; font-size: 16px;"></div>
+   
+        <input type="text" id="globalSearch" placeholder=" ရှာရန်..." autocomplete="off" style="padding: 4px 8px; border-radius: 6px; border: none; font-family: inherit; outline: none; width: 130px; font-size: 14px;">
+        <button class="btn-icon" onclick="searchArticle()" style="background: #e67e22;">🔍</button>
+
+    <div id="suggestion-box" style="position: absolute; top: 100%; left: 0; width: 220px; background: white; color: #2c3e50; border-radius: 6px; max-height: 250px; overflow-y: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: none; z-index: 9999; margin-top: 5px; font-size: 14px;"></div>
 </div>
             <div class="theme-dots">
                 <div class="dot" style="background:#fff;" onclick="setTheme('light')"></div>
@@ -262,286 +333,315 @@
             loadWiki(event.state.title, false);
         }
     };
-        async function loadWiki(title, push = true) {
-        currentActiveTitle = title;
-        document.getElementById('title-display').innerText = customDisplayNames[title] || title;
+    async function loadWiki(title, push = true) {
+    currentActiveTitle = title;
+    document.getElementById('title-display').innerText = customDisplayNames[title] || title;
+    
+    const cBox = document.getElementById('content');
+    if (push) {
+        history.pushState({ title: title }, title, "#" + encodeURIComponent(title));
+    }
+
+    // ၁။ ဖုန်းထဲမှာ Cache ရှိမရှိ အရင်စစ်ဆေးခြင်း
+    const cached = localStorage.getItem('wiki_cache_' + title);
+    if (cached) {
+        cBox.innerHTML = cached;
+        document.getElementById('main-content').scrollTop = 0;
+        attachTocLinks(); 
+        return; 
+    } else {
+        cBox.innerHTML = "<p style='text-align:center;'>ခဏစောင့်ပါ ...</p>";
+    }
+
+    // ပြင်ပ Domain များမှ ဒေတာလှမ်းယူသည့် Function
+    async function fetchFromDomain(domain) {
+        const api = `https://${domain}/w/api.php?action=parse&page=${encodeURIComponent(title)}&format=json&origin=*&prop=text`;
+        const res = await fetch(api);
+        return await res.json();
+    }
+
+    try {
+        let data;
+        let primaryDomain = "my.wikisource.org";
+        let secondaryDomain = "my.wikipedia.org";
         
-        const cBox = document.getElementById('content');
-        if (push) {
-            history.pushState({ title: title }, title, "#" + encodeURIComponent(title));
+        if (typeof wikipediaLinks !== 'undefined' && wikipediaLinks.includes(title)) {
+            primaryDomain = "my.wikipedia.org";
+            secondaryDomain = "my.wikisource.org";
         }
 
-        const cached = localStorage.getItem('cache_' + title);
-        if (cached) {
-            cBox.innerHTML = cached;
+        data = await fetchFromDomain(primaryDomain);
+
+        if (data.error) {
+            data = await fetchFromDomain(secondaryDomain);
+        }
+        
+        // ၂။ Wiki မှာ စာမျက်နှာ ရှိမရှိ စစ်ဆေးခြင်း
+        if(data.parse) {
+            const p = new DOMParser();
+            const d = p.parseFromString(data.parse.text['*'], 'text/html');
+            
+            // 💡 ဇယားများ ပြန်ပေါ်စေရန် table, ကို ဖျက်ပြီး ကော်မာအပိုမပါဘဲ သန့်ရှင်းရေးလုပ်ထားသည့်လိုင်း
+            d.querySelectorAll('.mw-editsection, .ws-header, .headerContainer, .navbox, .infobox').forEach(el => el.remove());
+
+            const cleanHtml = d.body.innerHTML;
+            cBox.innerHTML = cleanHtml;
             document.getElementById('main-content').scrollTop = 0;
+
             attachTocLinks(); 
-            return; 
+
+            try {
+                localStorage.setItem('wiki_cache_' + title, cleanHtml); 
+            } catch (e) { console.warn("Storage full"); }
+
         } else {
-            cBox.innerHTML = "<p style='text-align:center;'>ခဏစောင့်ပါခင်ဗျာ ...</p>";
+            // Wiki မှာ ရှာမတွေ့ရင် Google Search ကို အလိုအလျောက် လွှဲပေးမည့်လုပ်ဆောင်ချက်
+            searchGoogle(title);
         }
+    } catch(e) {
+        cBox.innerHTML = `<p style='text-align:center;'>အင်တာနက်ချိတ်ဆက်မှု ပြတ်တောက်နေပါသည်။</p>`;
+    }
 
-        async function fetchFromDomain(domain) {
-            const api = `https://${domain}/w/api.php?action=parse&page=${encodeURIComponent(title)}&format=json&origin=*&prop=text`;
-            const res = await fetch(api);
-            return await res.json();
-        }
-
-        try {
-            let data;
-            let primaryDomain = "my.wikisource.org";
-            let secondaryDomain = "my.wikipedia.org";
-            
-            if (typeof wikipediaLinks !== 'undefined' && wikipediaLinks.includes(title)) {
-                primaryDomain = "my.wikipedia.org";
-                secondaryDomain = "my.wikisource.org";
-            }
-
-            data = await fetchFromDomain(primaryDomain);
-
-            if (data.error) {
-                data = await fetchFromDomain(secondaryDomain);
-            }
-            
-            if(data.parse) {
-                const p = new DOMParser();
-                const d = p.parseFromString(data.parse.text['*'], 'text/html');
-                
-                d.querySelectorAll('table, .mw-editsection, .ws-header, .headerContainer, .navbox, .infobox').forEach(el => el.remove());
-                
-                d.querySelectorAll('#toc, .toc').forEach(el => el.classList.add('hide-on-print'));
-                
-                d.querySelectorAll('h1, h2, h3, h4, span.mw-headline').forEach(h => {
-                    if(h.innerText.trim() === 'မာတိကာ' || h.innerText.includes('မာတိကာ')) {
-                        if (h.tagName === 'SPAN') {
-                            h.parentElement.classList.add('hide-on-print');
-                        } else {
-                            h.classList.add('hide-on-print');
+    // မာတိကာ နှိပ်လျှင် အောက်သို့ ဆင်းပေးမည့် Function
+    function attachTocLinks() {
+        const box = document.getElementById('content');
+        box.querySelectorAll('a').forEach(a => {
+            let href = a.getAttribute('href');
+            if (href && href.startsWith('#')) {
+                a.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    try {
+                        let targetId = href.substring(1);
+                        let targetEl = document.getElementById(targetId) || document.getElementById(decodeURIComponent(targetId));
+                        if (targetEl) {
+                            document.getElementById('main-content').scrollTo({
+                                top: targetEl.offsetTop - 20,
+                                behavior: 'smooth'
+                            });
                         }
-                        
-                        let next = h.tagName === 'SPAN' ? h.parentElement.nextElementSibling : h.nextElementSibling;
-                        while(next && (next.tagName === 'UL' || next.tagName === 'OL' || next.tagName === 'DL')) {
-                            next.classList.add('hide-on-print');
-                            next = next.nextElementSibling;
-                        }
-                    }
+                    } catch(err) { console.log(err); }
                 });
-
-                const cleanHtml = d.body.innerHTML;
-                cBox.innerHTML = cleanHtml;
-                document.getElementById('main-content').scrollTop = 0;
-
-                attachTocLinks(); 
-
-                try {
-                    localStorage.setItem('cache_' + title, cleanHtml); 
-                } catch (e) { console.warn("Storage full"); }
-
-            } else {
-                cBox.innerHTML = `<p style='text-align:center; color:red; margin-top:30px;'>
-                    <b>'${title}'</b> ရှာမတွေ့ပါ။ <br><br>
-                    <span style="color:#555; font-size: 16px;">💡 အကြံပြုချက် - စာလုံးပေါင်း အတိအကျ မှန်ကန်ရန် လိုအပ်ပါသည်။</span>
-                </p>`;
             }
-        } catch(e) {
-            cBox.innerHTML = `<p style='text-align:center;'>အင်တာနက်ချိတ်ဆက်မှု ပြတ်တောက်နေပါသည်။</p>`;
-        }
+        });
+    }
+}
 
-        // မာတိကာ နှိပ်လျှင် အောက်သို့ ဆင်းပေးမည့် Function
-        function attachTocLinks() {
-            const box = document.getElementById('content');
-            box.querySelectorAll('a').forEach(a => {
-                let href = a.getAttribute('href');
-                if (href && href.startsWith('#')) {
-                    a.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        try {
-                            let targetId = href.substring(1);
-                            let targetEl = document.getElementById(targetId) || document.getElementById(decodeURIComponent(targetId));
-                            if (targetEl) {
-                                document.getElementById('main-content').scrollTo({
-                                    top: targetEl.offsetTop - 20,
-                                    behavior: 'smooth'
-                                });
-                            }
-                        } catch(err) { console.log(err); }
-                    });
-                }
+    // ၁။ ရှာဖွေမှုစတင်သည့် ခလုတ် (အလိုအလျောက်စနစ်အတွက် အလွန်ရိုးရှင်းသွားပါပြီ)
+    // ၁။ ရှာဖွေမှုစတင်သည့် လုပ်ဆောင်ချက် (Wiki ထဲ အရင်ရှာခိုင်းမည်)
+function searchArticle() {
+    let query = document.getElementById('globalSearch').value.trim();
+    if(query) {
+        loadWiki(query); 
+        document.getElementById('globalSearch').value = ""; 
+    }
+}
+
+// ၂။ Wiki တွင် ရှာမတွေ့ပါက Google မှ အလိုအလျောက် ဆက်ရှာပေးမည့် လုပ်ဆောင်ချက်
+async function searchGoogle(query) {
+    const cBox = document.getElementById('content');
+    cBox.innerHTML = "<p style='text-align:center;'> ဆက်လက်ရှာဖွေနေပါသည်...</p>";
+    
+    const API_KEY = "YOUR_API_KEY"; // 💡 အစ်ကို့ Google API Key ထည့်ရန်
+    const CX_ID = "YOUR_CX_ID";     // 💡 အစ်ကို့ Custom Search Engine ID ထည့်ရန်
+    
+    let googleApi = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CX_ID}&q=${encodeURIComponent(query)}`;
+    
+    try {
+        let res = await fetch(googleApi);
+        let data = await res.json();
+        
+        if (data.items && data.items.length > 0) {
+            let htmlResults = `<h3>🔍 Google ရှာဖွေမှုရလဒ်များ</h3><hr style='border-top:1px dashed #ccc;'>`;
+            
+            data.items.forEach(item => {
+                htmlResults += `
+                    <div style="margin-bottom: 20px; text-align: left;">
+                        <a href="${item.link}" target="_blank" style="color: #1a0dab !important; font-weight: bold; font-size: 18px; border-bottom: none !important;">
+                            ${item.title}
+                        </a>
+                        <p style="font-size: 15px; color: #4d5156; margin: 5px 0;">${item.snippet}</p>
+                        <span style="font-size: 12px; color: #006621;">${item.displayLink}</span>
+                    </div>
+                    <hr style='border-top:1px dashed #eee;'>
+                `;
             });
+            
+            cBox.innerHTML = htmlResults;
+            document.getElementById('title-display').innerText = `"${query}" ရှာဖွေမှုရလဒ်`;
+        } else {
+            cBox.innerHTML = `<p style='text-align:center;'> <b>"${query}"</b> ကို ရှာမတွေ့ပါခင်ဗျာ။</p>`;
         }
+    } catch (e) {
+        cBox.innerHTML = "<p style='text-align:center; color:red;'>အင်တာနက်လိုင်းကြောင့်  ရှာဖွေမှု အဆင်မပြေပါခင်ဗျာ။</p>";
     }
+}
 
-    function searchArticle() {
-        let query = document.getElementById('globalSearch').value.trim();
-        if(query) {
-            loadWiki(query); 
-            document.getElementById('globalSearch').value = ""; 
-        }
-    }
+// ၃။ စာမျက်နှာ စတင်ပွင့်ချိန်တွင် အလုပ်လုပ်မည့် လုပ်ဆောင်ချက်များ (Suggestions နှင့် Enter Key)
+document.addEventListener("DOMContentLoaded", function() {
+    let searchInput = document.getElementById('globalSearch');
+    let suggBox = document.getElementById('suggestion-box');
 
-    document.addEventListener("DOMContentLoaded", function() {
-        let searchInput = document.getElementById('globalSearch');
-        let suggBox = document.getElementById('suggestion-box');
+    if(searchInput && suggBox) {
+        // စာရိုက်နေစဉ် စာသားအလယ်ကပါ ရှာဖွေပေးမည့် စနစ်
+        searchInput.addEventListener("input", async function() {
+            let query = this.value.trim();
+            if(query.length < 2) { 
+                suggBox.style.display = "none"; 
+                return; 
+            }
+            try {
+                let wpApi = `https://my.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=5&format=json&origin=*`;
+                let wsApi = `https://my.wikisource.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=5&format=json&origin=*`;
+                
+                let [wpRes, wsRes] = await Promise.all([fetch(wpApi), fetch(wsApi)]);
+                let wpData = await wpRes.json();
+                let wsData = await wsRes.json();
 
-        if(searchInput && suggBox) {
-            searchInput.addEventListener("input", async function() {
-                let query = this.value.trim();
-                if(query.length < 2) { 
-                    suggBox.style.display = "none"; 
-                    return; 
-                }
-                try {
-                    let wpApi = `https://my.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(query)}&limit=5&namespace=0&format=json&origin=*`;
-                    let wsApi = `https://my.wikisource.org/w/api.php?action=opensearch&search=${encodeURIComponent(query)}&limit=5&namespace=0&format=json&origin=*`;
+                let wpTitles = wpData.query ? wpData.query.search.map(x => x.title) : [];
+                let wsTitles = wsData.query ? wsData.query.search.map(x => x.title) : [];
+
+                let suggestions = Array.from(new Set([...wsTitles, ...wpTitles]));
+
+                if(suggestions.length > 0) {
+                    suggBox.innerHTML = suggestions.map(title => 
+                        `<div style="padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #f0f0f0; text-align: left; transition: 0.2s;" 
+                              onclick="selectSuggestion('${title.replace(/'/g, "\\'")}')">
+                            📖 ${title}
+                         </div>`
+                    ).join('');
                     
-                    let [wpRes, wsRes] = await Promise.all([fetch(wpApi), fetch(wsApi)]);
-                    let wpData = await wpRes.json();
-                    let wsData = await wsRes.json();
+                    suggBox.querySelectorAll('div').forEach(div => {
+                        div.onmouseenter = () => div.style.backgroundColor = '#f1f2f6';
+                        div.onmouseleave = () => div.style.backgroundColor = 'transparent';
+                    });
 
-                    let suggestions = Array.from(new Set([...wsData[1], ...wpData[1]]));
-
-                    if(suggestions.length > 0) {
-                        suggBox.innerHTML = suggestions.map(title => 
-                            `<div style="padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #f0f0f0; text-align: left; transition: 0.2s;" 
-                                  hover="background:#f8f9fa;"
-                                  onclick="selectSuggestion('${title.replace(/'/g, "\\'")}')">
-                                📖 ${title}
-                             </div>`
-                        ).join('');
-                        
-                        suggBox.querySelectorAll('div').forEach(div => {
-                            div.onmouseenter = () => div.style.backgroundColor = '#f1f2f6';
-                            div.onmouseleave = () => div.style.backgroundColor = 'transparent';
-                        });
-
-                        suggBox.style.display = "block";
-                    } else {
-                        suggBox.style.display = "none";
-                    }
-                } catch(e) {
-                    console.warn("Suggestions တောင်းမရပါ");
-                }
-            });
-
-            searchInput.addEventListener("keypress", function(event) {
-                if (event.key === "Enter") {
-                    event.preventDefault();
-                    searchArticle();
+                    suggBox.style.display = "block";
+                } else {
                     suggBox.style.display = "none";
                 }
-            });
-        }
-
-        document.addEventListener("click", function(e) {
-            if(e.target !== searchInput && e.target !== suggBox) {
-                if(suggBox) suggBox.style.display = "none";
+            } catch(e) {
+                console.warn("Suggestions တောင်းမရပါ");
             }
         });
-    });
 
-    function selectSuggestion(title) {
-        document.getElementById('globalSearch').value = title;
-        document.getElementById('suggestion-box').style.display = "none";
-        loadWiki(title); 
-    }
-
-    function renderBookmarks() {
-        const bl = document.getElementById('bookmark-list');
-        bl.innerHTML = "";
-        let b = JSON.parse(localStorage.getItem('favs') || "[]");
-        b.forEach(t => {
-            let li = document.createElement('li');
-            li.innerHTML = `<span>${customDisplayNames[t] || t}</span><span class="del-mark" onclick="removeMark(event, '${t}')">✕</span>`;
-            li.onclick = () => { loadWiki(t); closeSidebar(); };
-            bl.appendChild(li);
+        // Enter ခေါက်လျှင် ရှာပေးမည့်စနစ်
+        searchInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                searchArticle();
+                suggBox.style.display = "none";
+            }
         });
     }
 
-    function exportPDF() { window.print(); }
-
-    function saveThisPage() {
-        if(!currentActiveTitle) return;
-        let b = JSON.parse(localStorage.getItem('favs') || "[]");
-        if(!b.includes(currentActiveTitle)) { 
-            b.push(currentActiveTitle); 
-            localStorage.setItem('favs', JSON.stringify(b)); 
-            renderBookmarks(); 
-            alert("မှတ်သားပြီးပါပြီ"); 
+    // အပြင်ဘက်ကို နှိပ်လျှင် Suggestion Box ပိတ်ပေးရန်
+    document.addEventListener("click", function(e) {
+        if(e.target !== searchInput && e.target !== suggBox) {
+            if(suggBox) suggBox.style.display = "none";
         }
-    }
-
-    function removeMark(e, t) {
-        e.stopPropagation();
-        let b = JSON.parse(localStorage.getItem('favs') || "[]");
-        localStorage.setItem('favs', JSON.stringify(b.filter(x => x !== t)));
-        renderBookmarks();
-    }
-
-        function goBack() { 
-        if (window.history.length > 1) { 
-            window.history.back(); 
-        } else { 
-            alert("နောက်ပြန်သွားရန် မရှိတော့ပါ။"); 
-        } 
-    }
-
-    // --- အောက်ပါ Code များကို အသစ် ထပ်ဖြည့်ပေးပါ ---
-    
-    // Browser က အရင်ဖတ်လက်စ နေရာကို အလိုလို Scroll ပြန်ဆွဲချပေးခြင်းကို တားဆီးရန်
-    if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-    }
-
-    // ဖုန်း (သို့) Browser ရဲ့ Back Button နှိပ်တဲ့အခါ အလုပ်လုပ်မည့် Function
-    window.addEventListener('popstate', function(event) {
-        if (event.state && event.state.title) {
-            loadWiki(event.state.title, false); 
-        }
-        
-        // နောက်ပြန်သွားတိုင်း စာမျက်နှာ ထိပ်ဆုံးသို့ သေချာပေါက် ရောက်စေရန်
-        setTimeout(() => {
-            let mainContent = document.getElementById('main-content');
-            if (mainContent) {
-                // အပေါ်ဆုံးသို့ ညင်သာစွာ ပြန်တက်သွားမည်
-                mainContent.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }, 100);
     });
-    
+});
 
-    function filterMenu() {
-    let filter = document.getElementById("menuSearch").value;
+// ၄။ Suggestion ကို နှိပ်လိုက်လျှင် လုပ်ဆောင်မည့်အရာ
+function selectSuggestion(title) {
+    document.getElementById('globalSearch').value = title;
+    document.getElementById('suggestion-box').style.display = "none";
+    loadWiki(title); 
+}
+
+// ၅။ Bookmarks (မှတ်သားထားသည်များ) စနစ်
+function renderBookmarks() {
+    const bl = document.getElementById('bookmark-list');
+    if(!bl) return;
+    bl.innerHTML = "";
+    let b = JSON.parse(localStorage.getItem('favs') || "[]");
+    b.forEach(t => {
+        let li = document.createElement('li');
+        li.innerHTML = `<span>${customDisplayNames[t] || t}</span><span class="del-mark" onclick="removeMark(event, '${t}')">✕</span>`;
+        li.onclick = () => { loadWiki(t); closeSidebar(); };
+        bl.appendChild(li);
+    });
+}
+
+function saveThisPage() {
+    if(!currentActiveTitle) return;
+    let b = JSON.parse(localStorage.getItem('favs') || "[]");
+    if(!b.includes(currentActiveTitle)) { 
+        b.push(currentActiveTitle); 
+        localStorage.setItem('favs', JSON.stringify(b)); 
+        renderBookmarks(); 
+        alert("မှတ်သားပြီးပါပြီ"); 
+    }
+}
+
+function removeMark(e, t) {
+    e.stopPropagation();
+    let b = JSON.parse(localStorage.getItem('favs') || "[]");
+    localStorage.setItem('favs', JSON.stringify(b.filter(x => x !== t)));
+    renderBookmarks();
+}
+
+// ၆။ အထွေထွေသုံး လုပ်ဆောင်ချက်များ (PDF ထုတ်ခြင်း၊ နောက်ပြန်သွားခြင်း၊ မာတိကာရှာခြင်း)
+function exportPDF() { window.print(); }
+
+function goBack() { 
+    if (window.history.length > 1) { 
+        window.history.back(); 
+    } else { 
+        alert("နောက်ပြန်သွားရန် မရှိတော့ပါ။"); 
+    } 
+}
+
+function filterMenu() {
+    let filter = document.getElementById("menuSearch").value.toUpperCase();
     let lis = document.querySelectorAll(".modal-body li");
     lis.forEach(li => {
         let text = li.textContent || li.innerText;
-        if (text.indexOf(filter) > -1) {
+        if (text.toUpperCase().indexOf(filter) > -1) {
             li.style.display = "";
         } else {
             li.style.display = "none";
         }
     });
 }
-    function searchArticle() {
-    let query = document.getElementById('globalSearch').value.trim();
-    if(query) {
-        // ရှာလိုက်တဲ့ စာသားကို Wikipedia ထဲမှာ မပါရင် Wikisource ကနေ ရှာဖို့ သတ်မှတ်ပေးနိုင်ပါတယ်
-        currentSource = "wikipedia"; // ပုံသေ Wikipedia မှရှာရန်
-        loadWiki(query); 
-        document.getElementById('globalSearch').value = ""; // ရှာပြီးရင် Box အလွတ်ပြန်ထားရန်
-    }
+
+// ၇။ ဖုန်း Back Button သမိုင်းကြောင်း ထိန်းသိမ်းခြင်း စနစ်
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
 }
-// Enter ခေါက်ရင်ပါ ရှာပေးအောင် ထပ်ထည့်ချင်ပါက-
-    document.addEventListener("DOMContentLoaded", function() {
-    let searchInput = document.getElementById('globalSearch');
-    if(searchInput) {
-        searchInput.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                searchArticle();
-            }
-        });
+
+window.addEventListener('popstate', function(event) {
+    if (event.state && event.state.title) {
+        loadWiki(event.state.title, false); 
+    }
+    setTimeout(() => {
+        let mainContent = document.getElementById('main-content');
+        if (mainContent) {
+            mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, 100);
+});
+// Search Box တွင် စာရိုက်ပြီး Enter (သို့) Phone Keyboard မှ Search နှိပ်လျှင် တိုက်ရိုက်ရှာရန်
+const searchInputBox = document.getElementById('globalSearch'); // 💡 အစ်ကို့ Search Box ID နှင့် တိုက်စစ်ရန်
+
+searchInputBox.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault(); 
+        let query = this.value.trim();
+        
+        if (query.length > 0) {
+            // ၁။ အောက်က Suggestion Box ကို ဖျောက်မည်
+            document.getElementById('suggestion-box').style.display = "none";
+            
+            // ၂။ ဖုန်း Keyboard ကို အလိုအလျောက် အောက်ချမည် (ပိတ်မည်)
+            this.blur(); 
+            
+            // ၃။ Wiki တွင် အရင်ရှာမည်၊ မတွေ့ပါက Google ကို အလိုအလျောက် ဆက်ရှာမည်
+            loadWiki(query); 
+        }
     }
 });
+
 </script>
 </body>
 </html>
